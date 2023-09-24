@@ -3,12 +3,13 @@ require "nvchad.lsp"
 
 local M = {}
 local utils = require "core.utils"
+local util = require "lspconfig/util"
 
 -- export on_attach & capabilities for custom lspconfigs
 
 M.on_attach = function(client, bufnr)
-  client.server_capabilities.documentFormattingProvider = false
-  client.server_capabilities.documentRangeFormattingProvider = false
+  client.server_capabilities.documentFormattingProvider = true
+  client.server_capabilities.documentRangeFormattingProvider = true
 
   utils.load_mappings("lspconfig", { buffer = bufnr })
 
@@ -63,5 +64,22 @@ require("lspconfig").lua_ls.setup {
     },
   },
 }
+
+require("lspconfig").gopls.setup({
+  on_attach = M.on_attach,
+  capabilities = M.capabilities,
+  cmd = {"gopls"},
+  filetypes = { "go", "gomod", "gowork", "gotmpl" },
+  root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+  settings = {
+    gopls = {
+      completeUnimported = true,
+      usePlaceholders = true,
+      analyses = {
+        unusedparams = true,
+      },
+    },
+  },
+})
 
 return M
