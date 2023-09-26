@@ -2,11 +2,48 @@
 -- List of all default plugins & their definitions
 local null_ls = {
     "jose-elias-alvarez/null-ls.nvim",
-    ft = "go",
+    ft = {"go", "c"},
     opts = function ()
       return require "plugins.configs.null-ls"
     end
 }
+
+local nvim_dap = {
+  "mfussenegger/nvim-dap",
+  config = function(_,_)
+    require("core.utils").load_mappings("dap")
+    return require "plugins.configs.dap"
+  end
+}
+
+local mason_nvim_dap = {
+  "jay-babu/mason-nvim-dap.nvim",
+  dependencies = {
+    "williamboman/mason.nvim",
+    "mfussenegger/nvim-dap",
+  },
+}
+
+local nvim_dap_ui = {
+    "rcarriga/nvim-dap-ui",
+    event = "VeryLazy",
+    dependencies = "mfussenegger/nvim-dap",
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+      dapui.setup()
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end
+  }
+
 local default_plugins = {
 
   "nvim-lua/plenary.nvim",
@@ -269,7 +306,10 @@ local default_plugins = {
       require("which-key").setup(opts)
     end,
   },
-  null_ls
+  null_ls,
+  nvim_dap,
+  mason_nvim_dap,
+  nvim_dap_ui,
 }
 
 local config = require("core.utils").load_config()

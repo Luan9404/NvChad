@@ -65,7 +65,7 @@ require("lspconfig").lua_ls.setup {
   },
 }
 
-require("lspconfig").gopls.setup({
+require("lspconfig").gopls.setup{
   on_attach = M.on_attach,
   capabilities = M.capabilities,
   cmd = {"gopls"},
@@ -80,6 +80,14 @@ require("lspconfig").gopls.setup({
       },
     },
   },
-})
+}
+
+require("lspconfig").clangd.setup{
+  on_attach = function (client, bufnr)
+    client.server_capabilities.signatureHelpProvider = false
+    M.on_attach(client, bufnr)
+  end,
+  capabilities = M.capabilities
+}
 
 return M

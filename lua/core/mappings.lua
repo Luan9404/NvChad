@@ -465,4 +465,30 @@ M.gitsigns = {
   },
 }
 
+M.dap = {
+  plugin = true,
+    n = {
+    ["<F9>"] = {
+      "<cmd> DapToggleBreakpoint <CR>",
+      "Add breakpoint at line",
+    },
+    ["<F5>"] = {
+      "<cmd> DapContinue <CR>",
+      "Start or continue the debugger",
+    },
+    ["<F10>"] = {
+      "<cmd> DapStepOver <CR>",
+      "Next step"
+    },
+    ["<F11>"] = {
+      "<cmd> DapStepInto <CR>",
+      "Step into"
+    },
+    ["<F12>"] = {
+      "<cmd> DapStepOut <CR>",
+      "Step over"
+    }
+  }
+}
+
 return M
